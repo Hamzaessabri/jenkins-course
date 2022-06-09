@@ -8,9 +8,9 @@ def jsonParse(def json) {
 
 def repo = "hamzaessabri/jenkins-course"
 
-def token = httpRequest authentication: 'boomi_auth', contentType: 'APPLICATION_FORM', httpMode: 'POST', requestBody: 'grant_type=client_credentials', url: 'http://localhost:9090/ws/rest/customers/v1'
+def token = httpRequest authentication: 'boomi_auth', contentType: 'APPLICATION_FORM', httpMode: 'POST', requestBody: 'grant_type=client_credentials', url: 'http://localhost:9090/ws/rest/disco/v1/albums/'
 def accessToken = jsonParse(token.content).access_token
-def pr = httpRequest customHeaders: [[maskValue: true, name: 'Authorization', value: 'Bearer ' + accessToken]], url: "http://localhost:9090/ws/rest/customers/v1/customer"
+def pr = httpRequest customHeaders: [[maskValue: true, name: 'Authorization', value: 'Bearer ' + accessToken]], url: "http://localhost:9090/ws/rest/disco/v1/albums/"
 
 for (p in jsonParse(pr.content).values) { 
     println(p.source.branch.name)
