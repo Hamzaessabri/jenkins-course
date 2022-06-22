@@ -8,3 +8,4 @@ node {
     stage('Execute Dev Process') {
         build job: 'Execute Process', parameters: [[$class: 'StringParameterValue', name: 'processName', value: ProcessName], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'atomType', value: atomType]]              
     }
+}
