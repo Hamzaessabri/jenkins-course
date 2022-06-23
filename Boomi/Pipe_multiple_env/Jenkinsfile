@@ -9,6 +9,6 @@ node {
         build job: 'Execute Process', parameters: [[$class: 'StringParameterValue', name: 'processName', value: ProcessName], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'atomType', value: atomType]]              
     }
     stage('Deploy to Prod') {
-        build job: 'Deploy Package', parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'env', value: PromotionEnv], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
+        build job: 'Deploy Package',propagate: false, parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'env', value: PromotionEnv], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
     }
 }
