@@ -1,5 +1,5 @@
 pipeline {
-    agent any {
+    agent any
         stages {
             stage('Packaging') {
                build job: 'Create Package', parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]
@@ -20,5 +20,4 @@ pipeline {
                 build job: 'Deploy Package',propagate: false, parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'env', value: PromotionEnv], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
             }
         }
-    }
 }
