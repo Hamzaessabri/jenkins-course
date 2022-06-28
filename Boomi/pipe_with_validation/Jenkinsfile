@@ -11,7 +11,7 @@ node {
             stage('sonar-scanner'){
             def scannerHome = tool name: 'Boomi Sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
             withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
-              sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=${SONAR_PROJECT_KEY}   -Dsonar.sources=${WORKSPACE}/${BUILD_NUMBER} -Dsonar.login=${sonarToken}"
+              sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey="${SONAR_PROJECT_KEY}"   -Dsonar.sources=${WORKSPACE}/${BUILD_NUMBER} -Dsonar.login=${sonarToken}"
                         }
             }
             stage('Deploy to Prod') {
