@@ -14,7 +14,18 @@ node {
               sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=BoomiSonar  -Dsonar.sources=${WORKSPACE} -Dsonar.login=${sonarToken}"
                         }
             }
-            stage('Deploy to Prod') {
-                build job: 'Deploy Package',propagate: false, parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'env', value: PromotionEnv], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
-            }
+            try {
+                stage('Deploy to Prod') {
+                            build job: 'Deploy Package', parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'env', value: PromotionEnv], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
+                        }
+              } catch(e) {
+                // mark build as failed
+                currentBuild.result = "FAILURE";
+
+                // send slack notification
+                slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+
+                // throw the error
+                throw e;
+              }
 }
