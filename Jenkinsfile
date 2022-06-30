@@ -1,0 +1,20 @@
+node {
+            stage('Packaging') {
+               build job: 'Create Package', parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]
+            }
+            stage('Deploy to Dev') {
+                build job: 'Deploy Package', parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'env', value: Dev_env], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
+            }
+            stage('Execute Dev Process') {
+                build job: 'Execute Process', parameters: [[$class: 'StringParameterValue', name: 'processName', value: ProcessName], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'atomType', value: atomType]]              
+            }
+            stage('sonar-scanner'){
+            def scannerHome = tool name: 'Boomi Sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            withCredentials([string(credentialsId: 'sonarToken', variable: 'sonarToken')]) {
+              sh "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=BoomiSonar  -Dsonar.sources=${WORKSPACE} -Dsonar.login=${sonarToken}"
+                        }
+            }
+            stage('Deploy to Prod') {
+                build job: 'Deploy Package',propagate: false, parameters: [[$class: 'StringParameterValue', name: 'processName', value: processName], [$class: 'StringParameterValue', name: 'env', value: PromotionEnv], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
+            }
+}
