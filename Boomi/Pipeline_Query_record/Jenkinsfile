@@ -9,7 +9,7 @@ node {
                 build job: 'Execute Process', parameters: [[$class: 'StringParameterValue', name: 'processName', value: ProcessName], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'atomType', value: atomType]]              
             }
             stage('Validate Test Process') {
-                build job: 'Query Execution Record', parameters: [[$class: 'StringParameterValue', name: 'processName', value: TestProcessName], [$class: 'StringParameterValue', name: 'env', value: InitialEnvironment], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'checkStatus', value: 'true']]                
+                build job: 'Query Execution Record', parameters: [[$class: 'StringParameterValue', name: 'processName', value: ProcessName], [$class: 'StringParameterValue', name: 'env', value: Dev_env], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'checkStatus', value: 'true']]                
             }     
             stage('sonar-scanner'){
             def scannerHome = tool name: 'Boomi Sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
