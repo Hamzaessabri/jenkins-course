@@ -6,7 +6,7 @@ node {
                 build job: 'Deploy Packages', parameters: [[$class: 'StringParameterValue', name: 'processNames', value: processNames], [$class: 'StringParameterValue', name: 'env', value: Dev_env], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
             }
             stage('Execute Dev Process') {
-                build job: 'Execute Process', parameters: [[$class: 'StringParameterValue', name: 'processName', value: ProcessNames], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'atomType', value: atomType]]              
+                build job: 'executeProcesses', parameters: [[$class: 'StringParameterValue', name: 'processNames', value: ProcessNames], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'atomType', value: atomType]]              
             }
             stage('Validate Test Process') {
                 build job: 'Query Execution Record', parameters: [[$class: 'StringParameterValue', name: 'processName', value: ProcessNames], [$class: 'StringParameterValue', name: 'env', value: Dev_env], [$class: 'StringParameterValue', name: 'atomName', value: atomName], [$class: 'StringParameterValue', name: 'checkStatus', value: 'true']]                
@@ -18,6 +18,6 @@ node {
                         }
             }
             stage('Deploy to Prod') {
-                build job: 'Deploy Packages',propagate: false, parameters: [[$class: 'StringParameterValue', name: 'processName', value: processNames], [$class: 'StringParameterValue', name: 'env', value: PromotionEnv], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
+                build job: 'Deploy Packages',propagate: false, parameters: [[$class: 'StringParameterValue', name: 'processNames', value: processNames], [$class: 'StringParameterValue', name: 'env', value: PromotionEnv], [$class: 'StringParameterValue', name: 'notes', value: notes], [$class: 'StringParameterValue', name: 'packageVersion', value: packageVersion]]            
             }
 }
