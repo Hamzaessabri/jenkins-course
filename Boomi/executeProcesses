@@ -1,0 +1,67 @@
+
+# executeProcess (asyncronously) by passing the processId and atomId
+# Usage : executeProcess.sh <atomId> <processId>
+#!/bin/bash
+source bin/common.sh
+#execute Process by atomId and processId
+ARGUMENTS=(atomName atomType)
+OPT_ARGUMENTS=(componentIds processNames processProperties)
+
+inputs "$@"
+if [ "$?" -gt "0" ]
+then
+        return 255;
+fi
+
+saveAtomName="${atomName}"
+saveAtomType="${atomType}"
+
+saveTag="${tag}"
+unset tag
+
+source bin/queryAtom.sh atomName="$atomName" atomStatus=online atomType=$atomType
+
+if [ -z "${componentId}" ]
+then
+  IFS=',' ;for processName in `echo "${processNames}"`; 
+	do 
+        atomName="${saveAtomName}"
+        atomType="${saveAtomType}"
+        processName=`echo "${processName}" | xargs`
+        saveProcessName="${processName}"
+      source bin/queryProcess.sh processName="$processName"
+  done
+else
+  IFS=',' ;for componentId in `echo "${componentIds}"`; 
+	do 
+        atomName="${saveAtomName}"
+        atomType="${saveAtomType}"
+        processName=`echo "${processName}" | xargs`
+        saveProcessName="${processName}"
+      source bin/queryProcess.sh processName="$processName"
+  done
+fi
+
+processIds=""
+
+if [ -z "${processProperties}" ]
+then
+	processProperties="[]"
+else
+	# escape double quotes with \"
+	processProperties=`echo $processProperties | sed -e 's/\"/\\\"/g'`
+fi
+
+ARGUMENTS=(atomId processIds processProperties)
+JSON_FILE=json/executeProcess.json
+URL=$baseURL/executeProcess
+ 
+createJSON
+
+callAPI
+
+clean
+if [ "$ERROR" -gt "0" ]
+then
+   return 255;
+fi
